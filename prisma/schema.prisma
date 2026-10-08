@@ -43,7 +43,3 @@ model Funcionarios{
   telefone   Int?
   endereco   String?
 }
-
-model Matricula{
-  id Int @id @default(autoincrement())
-}
