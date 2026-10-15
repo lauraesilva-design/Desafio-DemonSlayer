@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import { handleErrors } from "../helpers/handleErrors";
+
 
 export default {
   list: async (request: Request, response: Response) => {
     try {
-      const alunos = await prisma.aluno.findMany({
-        include: {
-          cursos: true,
+      const personagem = await prisma.personagem.findMany({
+        where: {
+
         },
       });
 
-      return response.status(200).json(alunos);
+      return response.status(200).json(personagem);
     } catch (e) {
       return handleErrors(e, response);
     }
@@ -20,17 +23,13 @@ export default {
   getById: async (request: Request, response: Response) => {
     try {
       const { id } = request.params;
-
-      const aluno = await prisma.aluno.findUnique({
+      const personagem = await prisma.personagem.findUnique({
         where: {
           id: +id,
         },
-        include: {
-          cursos: true,
-        },
       });
 
-      return response.status(200).json(aluno);
+      return response.status(200).json(personagem);
     } catch (e) {
       return handleErrors(e, response);
     }
@@ -38,53 +37,47 @@ export default {
 
   create: async (request: Request, response: Response) => {
     try {
-      const { matricula, cpf, nome, nascimento, email, telefone, endereco } =
+      const { respiracao, nome, patente, arma } =
         request.body;
 
-      if (!matricula || !cpf || !nome || !email) {
-        return response.status(400).json("Dados do aluno incompletos");
+      if (!respiracao || !nome || !patente || !arma ) {
+        return response.status(400).json("Dados do personagem incompletos");
       }
 
-      const aluno = await prisma.aluno.create({
+      const personagem = await prisma.personagem.create({
         data: {
-          matricula,
-          cpf,
+          respiracao,
           nome,
-          nascimento: new Date(nascimento),
-          email,
-          telefone,
-          endereco,
+          patente,
+          arma,
         },
       });
 
-      return response.status(201).json(aluno);
+      return response.status(201).json(personagem);
     } catch (e) {
       return handleErrors(e, response);
     }
   },
 
+
   update: async (request: Request, response: Response) => {
     try {
       const { id } = request.params;
-      const { matricula, cpf, nome, nascimento, email, telefone, endereco } =
-        request.body;
+      const { respiracao, nome, patente, arma } = request.body;
 
-      const aluno = await prisma.aluno.update({
+      const personagem = await prisma.personagem.update({
         where: {
           id: +id,
         },
         data: {
-          matricula,
-          cpf,
           nome,
-          nascimento: nascimento ? new Date(nascimento) : undefined,
-          email,
-          telefone,
-          endereco,
+          respiracao,
+          patente,
+          arma,
         },
       });
 
-      return response.status(200).json(aluno);
+      return response.status(200).json(personagem);
     } catch (e) {
       return handleErrors(e, response);
     }
@@ -94,15 +87,16 @@ export default {
     try {
       const { id } = request.params;
 
-      const aluno = await prisma.aluno.delete({
+      const personagem = await prisma.personagem.delete({
         where: {
           id: +id,
         },
       });
 
-      return response.status(200).json(aluno);
+      return response.status(200).json(personagem);
     } catch (e) {
       return handleErrors(e, response);
     }
   },
+
 };

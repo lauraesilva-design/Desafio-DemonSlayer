@@ -1,11 +1,8 @@
 import { Router } from "express";
-import alunoController from "./controllers/aluno";
-import cursoController from "./controllers/curso";
-import matriculaController from "./controllers/matricula";
-import funcionarioController from "./controllers/funcionario";
+import personagemController from "./controllers/personagem";
+import  usuarioController from "./controllers/usúario";
 import { authentication } from "../middlewares/authentication";
-import { isAdmin } from "../middlewares/permissions";
-import {isAdminOrHimself} from "../middlewares/permissions";
+
 
 // Inicializa o router
 const routes = Router();
@@ -15,33 +12,26 @@ routes.get("/", (request, response) => {
     return response.status(200).json({ message: "Hello Word!" });
 });
 
-// Rotas de alunos
-routes.get("/alunos", authentication, alunoController.list);
-routes.get("/alunos/:id", authentication, alunoController.getById);
-routes.post("/alunos", authentication, alunoController.create);
-routes.put("/alunos/:id", authentication, alunoController.update);
-routes.delete("/alunos/:id", authentication, alunoController.delete);
+// Rotas dos personagens
+routes.get("/personagens", personagemController.list);
+routes.get("/personagens/:id", personagemController.getById);
+routes.post("/personagens", authentication,personagemController.create);
+routes.put("/personagens/:id", authentication,personagemController.update);
+routes.delete("/personagens/:id",authentication, personagemController.delete);
 
-// Rotas de cursos
-routes.get("/cursos", authentication, cursoController.list);
-routes.get("/cursos/:id", authentication, cursoController.getById);
-routes.post("/cursos", authentication, cursoController.create);
-routes.put("/cursos/:id", authentication, cursoController.update);
-routes.delete("/cursos/:id",  authentication, cursoController.delete);
-
-//  Rotas de matriculas 
-routes.post("/matriculas/:id", authentication, matriculaController.create);
-routes.delete("/matriculas/:id", authentication, matriculaController.delete);
-
-//  Rotas de funcionarios
-routes.post("/login", funcionarioController.login);
-routes.get("/funcionarios", authentication, isAdmin, funcionarioController.list);
-routes.get("/funcionarios/:id", authentication, isAdminOrHimself, funcionarioController.getById);
-routes.post("/funcionarios", authentication, isAdmin, funcionarioController.create);
-routes.put("/funcionarios/:id", authentication, isAdminOrHimself, funcionarioController.update);
-routes.delete("/funcionarios/:id", authentication, isAdmin, funcionarioController.delete);
+// Rotas do usuario
+routes.post("/login", usuarioController.login);
 
 export default routes;
 
 
 
+//# Criar uma API (backend) relacionada a animes
+
+//1. Escolha um anime para ser o tema da sua API
+//2. Crie duas tabelas (usuários e personagens) e escolha as colunas que mais fazem sentido para esse anime
+//3. Crie as rotas e controllers para [listar, pegar dados, criar, atualizar e deletar personagens]
+//4. Crie uma rota de login para os usuários
+//5. As rotas de criar, atualizar e deletar personagens devem ter autenticação por jwt
+//6. Use um arquivo seed para criar o(s) usuários
+//7. Entrega 19/10
